@@ -7,7 +7,6 @@ namespace Tracer.Core
 {
     public class Tracer : ITracer
     {
-        //private readonly Mutex _mutex = new();
         private class TrackedMethod
         {
             public Stopwatch Stopwatch;
@@ -49,8 +48,7 @@ namespace Tracer.Core
             
             trackedMethod.Stopwatch.Stop();
             trackedMethod.MethodInformation.Time = trackedMethod.Stopwatch.Elapsed;
-
-            //_mutex.WaitOne();
+            
             if (!_trace.Threads.TryGetValue(threadId, out var threadInformation))
             {
                 _trace.Threads[threadId] = new ThreadInformation() {
@@ -71,14 +69,11 @@ namespace Tracer.Core
                 _trace.Threads[threadId].Time = _trace.Threads[threadId].Time.Add(method.Time);
             }
             
-            //_mutex.ReleaseMutex();
         }
 
         public TraceResult GetTraceResult()
         {
-           // _mutex.WaitOne();
             var result = (TraceResult)_trace.GetData();
-            //_mutex.ReleaseMutex();
             return result;
         }
     }

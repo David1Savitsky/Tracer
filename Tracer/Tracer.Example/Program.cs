@@ -31,21 +31,6 @@ class Program
         
     static void Main(string[] args)
     {
-        /*_tracer = new Core.Tracer();
-        MethodC();
-        MethodB();
-        var thread = new Thread(MethodC);
-        thread.Start();
-        Thread.Sleep(1000);
-        using var stream = new FileStream("rez.xml", FileMode.Create);
-        new XmlSerializer().Serialize(_tracer.GetTraceResult(), stream);*/
-
-        /*_tracer = new Core.Tracer();
-        MethodC();
-        MethodB();
-        var thread = new Thread(MethodC);
-        thread.Start();
-        Thread.Sleep(5000);*/
         var tracer = new Core.Tracer();
         var template = new FirstThread(tracer); 
         template.CustomMethod();

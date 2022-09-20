@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using Tracer.Core.Interfaces;
 using Xunit;
 using Assert = Xunit.Assert;
@@ -100,7 +101,7 @@ public class TracerTests
             }
         }
         
-        [Fact]
+        [Test]
         public void SingleThread()
         {
             var tracer = new Tracer();
@@ -121,19 +122,28 @@ public class TracerTests
             Assert.NotNull(result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[1].Methods);
             Assert.Equal(0, result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].Methods.Count);
             Assert.Equal(0, result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[1].Methods.Count);
-            Assert.Equal("CustomMethod", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].MethodName);
-            Assert.Equal("FooSingleThread", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].ClassName);
-            Assert.Equal("M1", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].MethodName);
-            Assert.Equal("BarSingleThread", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].ClassName);
-            Assert.Equal("M2", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[1].MethodName);
-            Assert.Equal("BarSingleThread", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[1].ClassName);
+            Assert.Multiple(() =>
+            {
+                Assert.Equal("CustomMethod", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].MethodName);
+                Assert.Equal("FooSingleThread", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].ClassName); 
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.Equal("M1", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].MethodName);
+                Assert.Equal("BarSingleThread", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].ClassName);    
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.Equal("M2", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[1].MethodName);
+                Assert.Equal("BarSingleThread", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[1].ClassName);
+            });
             Assert.True(result.Threads[Thread.CurrentThread.ManagedThreadId].Time.TotalMilliseconds >= 270);
             Assert.True(result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Time.TotalMilliseconds >= 270);
             Assert.True(result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].Time.TotalMilliseconds >= 100);
             Assert.True(result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[1].Time.TotalMilliseconds >= 70);
         }
 
-        [Fact]
+        [Test]
         public void MultipleThreads()
         {
             var tracer = new Tracer();
@@ -151,16 +161,18 @@ public class TracerTests
             Assert.Equal(1, result.Threads[Thread.CurrentThread.ManagedThreadId].Methods.Count);
             Assert.NotNull(result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods);
             Assert.Equal(1, result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods.Count);
-            Assert.NotNull(result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods);
-            Assert.Equal(1, result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods.Count);
             Assert.NotNull(result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].Methods);
             Assert.Equal(0, result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].Methods.Count);
-            Assert.Equal("CustomMethod", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].MethodName);
-            Assert.Equal("FooMultipleThreads", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].ClassName);
-            Assert.Equal("CustomMethod", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].MethodName);
-            Assert.Equal("FooMultipleThreads", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].ClassName);
-            Assert.Equal("M2", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].MethodName);
-            Assert.Equal("BarMultipleThreads", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].ClassName);
+            Assert.Multiple(() =>
+            {
+                Assert.Equal("CustomMethod", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].MethodName);
+                Assert.Equal("FooMultipleThreads", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].ClassName);
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.Equal("M2", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].MethodName);
+                Assert.Equal("BarMultipleThreads", result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].ClassName);    
+            });
             Assert.True(result.Threads[Thread.CurrentThread.ManagedThreadId].Time.TotalMilliseconds >= 170);
             Assert.True(result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Time.TotalMilliseconds >= 170);
             Assert.True(result.Threads[Thread.CurrentThread.ManagedThreadId].Methods[0].Methods[0].Time.TotalMilliseconds >= 70);

@@ -8,20 +8,6 @@ public class Service
 {
     public void Upload(TraceResult result)
     {
-        /*foreach (var filePath in Directory.EnumerateFiles("SerializerPlugins", "*.dll"))
-        {
-            var assembly = Assembly.LoadFrom(filePath);
-            var serializerNamespace = filePath.Split('\\')[1];
-            serializerNamespace = serializerNamespace[..serializerNamespace.LastIndexOf('.')];
-            var serializerTypeName = serializerNamespace.Split('.')[2];
-            var fullName = $"{serializerNamespace}.{serializerTypeName}TraceResultSerializer";
-            var serializerType = assembly.GetType(fullName);
-
-            var serializer = (ITraceResultSerializer)(Activator.CreateInstance(serializerType));
-            using var stream = new FileStream($"rez.{serializerTypeName.ToLower()}", FileMode.Create);
-            serializer.Serialize(result, stream);
-        }*/
-        
         var files = Directory.EnumerateFiles("SerializerPlugins", "*.dll");
         foreach (var file in files)
         {
