@@ -78,7 +78,6 @@ internal class FirstThread
     public void CustomMethod()
     {
         _tracer.StartTrace();
-        Thread.Sleep(100);
         var task = Task.Run(_secondThread.FirstMethod);
         _secondThread.SecondMethod();
         _secondThread.FirstMethod();
